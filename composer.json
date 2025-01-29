@@ -1,48 +1,42 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "martinpetricko/laravel-approvals",
+    "description": "Review model changes before publishing.",
     "keywords": [
-        ":vendor_name",
+        "Martin Petricko",
         "laravel",
-        ":package_slug"
+        "approvals"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/martinpetricko/laravel-approvals",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Martin Petricko",
+            "email": "matopetricko@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.4",
-        "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0"
+        "php": "^8.2",
+        "jfcherng/php-diff": "^6.16",
+        "spatie/laravel-package-tools": "^1.18"
     },
     "require-dev": {
-        "laravel/pint": "^1.14",
-        "nunomaduro/collision": "^8.1.1||^7.10.0",
-        "larastan/larastan": "^2.9",
-        "orchestra/testbench": "^9.0.0||^8.22.0",
-        "pestphp/pest": "^3.0",
+        "laravel/pint": "^1.20",
+        "nunomaduro/collision": "^8.5",
+        "orchestra/testbench": "^9.9",
+        "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-arch": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
-        "phpstan/extension-installer": "^1.3",
-        "phpstan/phpstan-deprecation-rules": "^1.1",
-        "phpstan/phpstan-phpunit": "^1.3",
-        "spatie/laravel-ray": "^1.35"
+        "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "MartinPetricko\\LaravelApprovals\\": "src/",
+            "MartinPetricko\\LaravelApprovals\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "MartinPetricko\\LaravelApprovals\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -63,10 +57,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "MartinPetricko\\LaravelApprovals\\LaravelApprovalsServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "LaravelApprovals": "MartinPetricko\\LaravelApprovals\\Facades\\LaravelApprovals"
             }
         }
     },
