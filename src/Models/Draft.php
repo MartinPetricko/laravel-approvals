@@ -34,6 +34,8 @@ class Draft extends Model
     ];
 
     protected $with = [
+        'author',
+        'reviewer',
         'draftable',
     ];
 

@@ -63,7 +63,5 @@
                 "LaravelApprovals": "MartinPetricko\\LaravelApprovals\\Facades\\LaravelApprovals"
             }
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
