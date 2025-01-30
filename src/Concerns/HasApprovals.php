@@ -3,11 +3,12 @@
 namespace MartinPetricko\LaravelApprovals\Concerns;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use MartinPetricko\LaravelApprovals\Enums\DraftStatus;
@@ -128,7 +129,7 @@ trait HasApprovals
 
             foreach ($approvableRelations as $relationName) {
                 $related = $this->getRelation($relationName);
-                if ($related instanceof Collection) {
+                if ($related instanceof EloquentCollection) {
                     foreach ($related as $relatedModel) {
                         $relatedModel->loadDraftData();
                     }
@@ -162,6 +163,8 @@ trait HasApprovals
 
         $oldData = Arr::only($oldData, array_keys($newData));
 
+        $parentDrafts = $this->createApprovableParentDrafts();
+
         if ($this->hasPendingDraft()) {
             $draft = $this->latestDraft->fill([
                 'type' => $type,
@@ -169,7 +172,7 @@ trait HasApprovals
             ]);
         } else {
             $draft = $this->drafts()->make([
-                'request_id' => LaravelApprovals::getRequestId(),
+                'request_id' => $parentDrafts->first()?->request_id ?: LaravelApprovals::getRequestId(),
                 'status' => DraftStatus::Pending,
                 'type' => $type,
                 'old_data' => $oldData,
@@ -180,16 +183,21 @@ trait HasApprovals
         $draft->author()->associate(Auth::user());
         $draft->save();
 
+        return $draft;
+    }
+
+    protected function createApprovableParentDrafts(): Collection
+    {
+        $drafts = collect();
         foreach ($this->getApprovableParentRelations() as $relationName) {
             foreach ($this->{$relationName}()->with('latestDraft')->get() as $related) {
                 if ($related->hasPendingDraft()) {
                     continue;
                 }
-                $related->createDraft(true);
+                $drafts->push($related->createDraft(true));
             }
         }
-
-        return $draft;
+        return $drafts;
     }
 
     public function forceRemoveAllDrafts(): void
