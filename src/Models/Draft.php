@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use MartinPetricko\LaravelApprovals\Enums\DraftStatus;
 use MartinPetricko\LaravelApprovals\Enums\DraftType;
+use MartinPetricko\LaravelApprovals\Events\DraftApproved;
+use MartinPetricko\LaravelApprovals\Events\DraftRejected;
 use MartinPetricko\LaravelApprovals\Helpers\Diff;
 
 class Draft extends Model
@@ -75,6 +77,8 @@ class Draft extends Model
                 });
             }
         });
+
+        DraftApproved::dispatch($this);
     }
 
     public function reject(string $message = null): void
@@ -91,6 +95,8 @@ class Draft extends Model
                 $draft->save();
             }
         });
+
+        DraftRejected::dispatch($this);
     }
 
     public function getDiff(): Diff
