@@ -8,15 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use MartinPetricko\LaravelApprovals\Concerns\HasApprovals;
 use MartinPetricko\LaravelApprovals\Enums\DraftStatus;
 use MartinPetricko\LaravelApprovals\Enums\DraftType;
 use MartinPetricko\LaravelApprovals\Helpers\Diff;
 
 class Draft extends Model
 {
-    use HasApprovals;
-
     protected $fillable = [
         'request_id',
         'status',
