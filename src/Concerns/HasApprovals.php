@@ -192,6 +192,7 @@ trait HasApprovals
         foreach ($this->getApprovableParentRelations() as $relationName) {
             foreach ($this->{$relationName}()->with('latestDraft')->get() as $related) {
                 if ($related->hasPendingDraft()) {
+                    $drafts->push($related->latestDraft);
                     continue;
                 }
                 $drafts->push($related->createDraft(true));
