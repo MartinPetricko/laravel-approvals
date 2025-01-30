@@ -156,6 +156,8 @@ trait HasApprovals
             $type = DraftType::Update;
             $newData = $this->getApprovableData($this->getDirty());
 
+            $this->refresh();
+
             if ($force === false && $newData === []) {
                 return null;
             }
@@ -168,6 +170,7 @@ trait HasApprovals
         if ($this->hasPendingDraft()) {
             $draft = $this->latestDraft->fill([
                 'type' => $type,
+                'old_data' => array_merge($this->latestDraft->old_data, $oldData),
                 'new_data' => array_merge($this->latestDraft->new_data, $newData),
             ]);
         } else {
