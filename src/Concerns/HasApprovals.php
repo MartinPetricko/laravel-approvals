@@ -20,15 +20,11 @@ trait HasApprovals
 {
     protected static bool $approves = true;
 
-    protected static bool $approvesOnCreate = true;
-
-    protected static bool $approvesOnUpdate = true;
-
     public static function bootHasApprovals(): void
     {
         static::creating(static function (Model $model) {
             /** @var HasApprovals $model */
-            if (static::$approves && static::$approvesOnCreate) {
+            if (static::$approves && $model->getApprovesOnCreate()) {
                 $model->{$model::getApprovedAtColumn()} = null;
             } else {
                 $model->{$model::getApprovedAtColumn()} = now();
@@ -37,19 +33,19 @@ trait HasApprovals
 
         static::created(static function (Model $model) {
             /** @var HasApprovals $model */
-            if (static::$approves && static::$approvesOnCreate) {
+            if (static::$approves && $model->getApprovesOnCreate()) {
                 $model->createDraft();
             }
         });
 
         static::updating(static function (Model $model) {
             /** @var HasApprovals $model */
-            return !(static::$approves && static::$approvesOnUpdate && $model->createDraft() !== null);
+            return !(static::$approves && $model->getApprovesOnUpdate() && $model->createDraft() !== null);
         });
 
         static::saving(static function (Model $model) {
             /** @var HasApprovals $model */
-            return !($model->exists && static::$approves && static::$approvesOnUpdate && $model->createDraft() !== null);
+            return !($model->exists && static::$approves && $model->getApprovesOnUpdate() && $model->createDraft() !== null);
         });
 
         static::deleted(static function (Model $model) {
@@ -65,6 +61,16 @@ trait HasApprovals
         $this->mergeCasts([
             static::getApprovedAtColumn() => 'datetime',
         ]);
+    }
+
+    public function getApprovesOnCreate(): bool
+    {
+        return property_exists($this, 'approvesOnCreate') ? $this->approvesOnCreate : true;
+    }
+
+    public function getApprovesOnUpdate(): bool
+    {
+        return property_exists($this, 'approvesOnUpdate') ? $this->approvesOnUpdate : true;
     }
 
     public function getApprovable(): array
