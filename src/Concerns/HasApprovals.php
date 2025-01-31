@@ -95,12 +95,12 @@ trait HasApprovals
 
     public function scopeApproved(Builder $query): void
     {
-        $query->whereDate(static::getApprovedAtColumn(), '>=', now());
+        $query->whereDate(static::getApprovedAtColumn(), '<=', now());
     }
 
     public function scopeUnapproved(Builder $query): void
     {
-        $query->whereNull(static::getApprovedAtColumn())->orWhereDate(static::getApprovedAtColumn(), '<', now());
+        $query->whereNull(static::getApprovedAtColumn())->orWhereDate(static::getApprovedAtColumn(), '>', now());
     }
 
     public function latestDraft(): MorphOne
