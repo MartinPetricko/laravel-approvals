@@ -149,11 +149,11 @@ trait HasApprovals
     {
         $oldData = $this->getApprovableData($this->getRawOriginal());
 
+        $type = $this->wasRecentlyCreated || $this->{self::getApprovedAtColumn()} === null ? DraftType::Create : DraftType::Update;
+
         if ($this->wasRecentlyCreated) {
-            $type = DraftType::Create;
             $newData = $this->getApprovableData($this->refresh()->getRawOriginal());
         } else {
-            $type = DraftType::Update;
             $newData = $this->getApprovableData($this->getDirty());
 
             $this->refresh();
