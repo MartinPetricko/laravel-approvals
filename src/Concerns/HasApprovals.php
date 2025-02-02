@@ -253,15 +253,15 @@ trait HasApprovals
 
     public static function withoutApproves(callable $callback): mixed
     {
-        $lastState = static::$approves;
+        $approves = static::$approves;
 
         static::disableApproves();
 
-        $result = App::call($callback);
-
-        static::$approves = $lastState;
-
-        return $result;
+        try {
+            return App::call($callback);
+        } finally {
+            static::$approves = $approves;
+        }
     }
 
     public static function getApprovedAtColumn(): string
