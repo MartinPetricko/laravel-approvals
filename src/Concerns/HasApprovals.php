@@ -23,7 +23,11 @@ trait HasApprovals
     public static function bootHasApprovals(): void
     {
         static::creating(static function (Model $model) {
-            /** @var HasApprovals $model */
+            /** @var HasApprovals|Model $model */
+            if ($model->getAttribute($model::getApprovedAtColumn()) !== null) {
+                return;
+            }
+
             if (static::$approves && $model->getApprovesOnCreate()) {
                 $model->{$model::getApprovedAtColumn()} = null;
             } else {
@@ -32,7 +36,11 @@ trait HasApprovals
         });
 
         static::created(static function (Model $model) {
-            /** @var HasApprovals $model */
+            /** @var HasApprovals|Model $model */
+            if ($model->getAttribute($model::getApprovedAtColumn()) !== null) {
+                return;
+            }
+
             if (static::$approves && $model->getApprovesOnCreate()) {
                 $model->createDraft();
             }
