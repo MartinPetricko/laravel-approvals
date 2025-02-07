@@ -15,8 +15,7 @@ class LaravelApprovalsServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-approvals')
             ->hasConfigFile()
-            ->hasMigration('create_drafts_table')
-            ->runsMigrations();
+            ->hasMigration('create_drafts_table');
     }
 
     public function packageRegistered(): void
