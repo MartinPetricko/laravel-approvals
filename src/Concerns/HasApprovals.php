@@ -117,11 +117,17 @@ trait HasApprovals
         $query->whereNull(static::getApprovedAtColumn())->orWhere(static::getApprovedAtColumn(), '>', now());
     }
 
+    /**
+     * @return MorphOne<Draft, $this>
+     */
     public function latestDraft(): MorphOne
     {
         return $this->morphOne(LaravelApprovals::getDraftModel(), 'draftable')->latest();
     }
 
+    /**
+     * @return MorphMany<Draft, $this>
+     */
     public function drafts(): MorphMany
     {
         return $this->morphMany(LaravelApprovals::getDraftModel(), 'draftable');
